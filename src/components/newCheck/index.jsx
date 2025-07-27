@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import toast from "react-hot-toast";
 
+import { CInput } from "../cInput";
+
 import { Close } from "../../libs/icons";
 
 import { useLoader } from "../../contexts";
@@ -21,7 +23,10 @@ export const NewCheck = ({ is_client = false, user_id }) => {
     const [value, setValue] = useState({
         name_client: "",
         cashier_id: null,
-        obs: ""
+        obs: "",
+        street: "",
+        house_number: "",
+        reference: "",
     });
 
     const { toggleView, setToggleView } = useToggleView();
@@ -49,6 +54,9 @@ export const NewCheck = ({ is_client = false, user_id }) => {
                 name_client: value.name_client,
                 cashier_id: value.cashier_id,
                 obs: value.obs,
+                street: "",
+                house_number: "",
+                reference: "",
             };
 
             setLoading(true);
@@ -93,17 +101,17 @@ export const NewCheck = ({ is_client = false, user_id }) => {
                 </h2>
 
                 <div className="flex flex-col gap-3">
-                    <input
-                        className="w-full border rounded-xl p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                        type="text"
+                    <CInput
+                        id="name_client"
+                        name="name_client"
                         placeholder="Nome do cliente"
                         onChange={(e) => handleInput("name_client", e)}
                         value={value.name_client}
                     />
 
-                    <input
-                        className="w-full border rounded-xl p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                        type="text"
+                    <CInput
+                        id="obs"
+                        name="obs"
                         placeholder="Observação"
                         onChange={(e) => handleInput("obs", e)}
                         value={value.obs}

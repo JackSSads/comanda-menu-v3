@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
+import { CInput, CSelect } from "../../components";
+
 import { useLoader } from "../../contexts";
 
 import { Delete, Edit, Plus, Reflesh } from "../../libs/icons";
@@ -112,7 +114,7 @@ export const Categories = ({ showComponent }) => {
       });
   };
 
-  const handleNewCategory = (field, event) => {
+  const handleInput = (field, event) => {
     setNewCategory((prev) => ({ ...prev, [field]: event.target.value }));
   };
 
@@ -140,9 +142,8 @@ export const Categories = ({ showComponent }) => {
             {categories.map((category, idx) => (
               <tr
                 key={category.category_id}
-                className={`border-b border-gray-200 ${
-                  idx % 2 === 0 ? "bg-[#FFFDF7]" : "bg-white"
-                } hover:bg-[#FFF4DB] transition-colors`}
+                className={`border-b border-gray-200 ${idx % 2 === 0 ? "bg-[#FFFDF7]" : "bg-white"
+                  } hover:bg-[#FFF4DB] transition-colors`}
               >
                 <td className="px-6 py-3 text-center uppercase font-semibold">{category.name_category}</td>
                 <td className="px-6 py-3 text-center uppercase font-medium">{category.screen}</td>
@@ -176,26 +177,24 @@ export const Categories = ({ showComponent }) => {
       </div>
 
       <div className="mt-6 flex flex-col gap-4">
-        <input
-          type="text"
+        <CInput
+          id="name_category"
+          name="name_category"
           placeholder="Nome da categoria"
-          className="w-full border rounded-xl p-3 text-[#1C1D26] font-semibold leading-tight focus:outline-none focus:shadow-outline"
+          onChange={(e) => handleInput("name_category", e)}
           value={newCategory.name_category}
-          onChange={(e) => handleNewCategory("name_category", e)}
         />
 
-        <select
-          name="screen_category"
-          id="screen_category"
+        <CSelect
+          options={[
+            { value: "", label: "Selecione a tela" },
+            { value: "bar", label: "Bar" },
+            { value: "churrasco", label: "Churrasco" },
+            { value: "sem tela", label: "Sem tela" },
+          ]}
+          onChange={(e) => handleInput("screen", e)}
           value={newCategory.screen}
-          onChange={(e) => handleNewCategory("screen", e)}
-          className="w-full border rounded-xl p-3 text-[#1C1D26] font-semibold leading-tight focus:outline-none focus:shadow-outline"
-        >
-          <option value="">Selecione a tela</option>
-          <option value="bar">Bar</option>
-          <option value="churrasco">Churrasco</option>
-          <option value="sem tela">Sem tela</option>
-        </select>
+        />
 
         <button
           className="flex gap-2 justify-center w-full p-3 font-semibold text-white rounded-xl bg-[#EB8F00] hover:bg-[#1C1D26] transition-colors duration-200"

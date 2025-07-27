@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
 
+import { CInput, CSelect, CTextarea } from "../../components";
+
 import { useToggleView, useLoader } from "../../contexts";
 import { Plus, Close, Delete } from "../../libs/icons";
 import { ProductService } from "../../service/product/ProductService";
@@ -246,48 +248,46 @@ export const ModalProduct = ({ action, id }) => {
                 </h2>
 
                 <div className="flex flex-col gap-3">
-                    <input
-                        type="text"
+                    <CInput
+                        id="product_name"
+                        name="product_name"
                         placeholder="Nome do produto"
-                        className="w-full border rounded-xl p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
                         onChange={(e) => handleInput("product_name", e)}
                         value={value.product_name}
                     />
 
-                    <input
-                        type="number"
+                    <CInput
+                        id="price"
+                        name="price"
                         placeholder="Preço"
-                        className="w-full border rounded-xl p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
                         onChange={(e) => handleInput("price", e)}
                         value={value.price}
                     />
 
-                    <textarea
+                    <CTextarea
+                        id="description"
+                        name="description"
                         placeholder="Descrição"
-                        className="w-full border rounded-xl p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
                         onChange={(e) => handleInput("description", e)}
-                        value={value.description || ""}
+                        value={value.description}
                     />
 
-                    <input
-                        type="number"
+                    <CInput
+                        id="stock"
+                        name="stock"
                         placeholder="Estoque"
-                        className="w-full border rounded-xl p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
                         onChange={(e) => handleInput("stock", e)}
                         value={value.stock}
                     />
 
-                    <select
-                        className="w-full border rounded-xl p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    <CSelect
+                        options={categories.map(cat => ({
+                            value: cat.category_id,
+                            label: cat.name_category
+                        }))}
                         value={value.category_id}
-                        onChange={(e) => handleInput("category_id", e)}>
-                        <option value={0}>Selecione uma categoria</option>
-                        {categories.map(cat => (
-                            <option key={cat.category_id} value={cat.category_id}>
-                                {cat.name_category}
-                            </option>
-                        ))}
-                    </select>
+                        onChange={(e) => handleInput("category_id", e)}
+                    />
 
                     <div className="flex flex-col items-center gap-2">
                         <button

@@ -1,6 +1,8 @@
 import { useCallback, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
+import { CInput, CSelect } from "../../components";
+
 import { useLoader, useToggleView } from "../../contexts";
 import { useDebounce } from "../../hooks/UseDebounce";
 
@@ -40,13 +42,11 @@ export const Settings = ({ showComponent }) => {
     });
   }, [setting]);
 
-  const handleSetting = (field, value) => {
+  const handleInput = (field, value) => {
     setSetting((prev) => ({
       ...prev,
-      [field]:
-        field === "serveice_change" || field === "service_change_printer"
-          ? Number(value)
-          : value,
+      [field]: field === "serveice_change" || field === "service_change_printer"
+        ? Number(value.target.value) : value.target.value,
     }));
     setHasManualChange(true);
   };
@@ -110,7 +110,7 @@ export const Settings = ({ showComponent }) => {
 
           const webpDataUrl = canvas.toDataURL("image/webp", 0.8);
 
-          handleSetting("image_pix", webpDataUrl);
+          handleInput("image_pix", webpDataUrl);
         };
         img.src = e.target.result;
       };
@@ -182,75 +182,49 @@ export const Settings = ({ showComponent }) => {
         Configurações
       </h2>
 
-      <label className="text-slate-700 text-sm font-bold mb-2 flex flex-col">
-        Nome do Estabelecimento
-        <input
-          type="text"
-          id="establishmentName"
-          name="establishmentName"
-          className="w-full border rounded-xl p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          onChange={(e) => handleSetting("estabishment_name", e.target.value)}
-          value={setting.estabishment_name}
-          placeholder="Ex: Restaurante XYZ"
-        />
-      </label>
+      <CInput
+        id="establishmentName"
+        name="establishmentName"
+        label="Nome do Estabelecimento"
+        placeholder="Ex: Restaurante XYZ"
+        onChange={(e) => handleInput("estabishment_name", e)}
+        value={setting.estabishment_name}
+      />
 
-      <label className="text-slate-700 text-sm font-bold mb-2 flex flex-col">
-        Cobrar Taxa de Serviço?
-        <select
-          className="w-full border rounded-xl p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="serviceCharge"
-          name="serviceCharge"
-          value={setting.serveice_change}
-          onChange={(e) => handleSetting("serveice_change", e.target.value)}
-        >
-          <option value={1}>Sim</option>
-          <option value={0}>Não</option>
-        </select>
-      </label>
+      <CSelect
+        label="Cobrar Taxa de Serviço?"
+        options={[{ value: 1, label: "Sim" }, { value: 0, label: "Não" }]}
+        value={setting.serveice_change}
+        onChange={(e) => handleInput("serveice_change", e)}
+      />
 
       {String(setting.serveice_change) === "1" && (
-        <label className="text-slate-700 text-sm font-bold mb-2 flex flex-col">
-          Percentual de Taxa de Serviço (%)
-          <input
-            type="number"
-            id="serviceChargePercentage"
-            name="serviceChargePercentage"
-            min="0"
-            max="100"
-            step="0.1"
-            className="w-full border rounded-xl p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            onChange={(e) => handleSetting("service_change_percentage", e.target.value)}
-            value={setting.service_change_percentage}
-          />
-        </label>
+        <CInput
+          id="serviceChargePercentage"
+          name="serviceChargePercentage"
+          label="Percentual de Taxa de Serviço (%)"
+          placeholder="0"
+          onChange={(e) => handleInput("service_change_percentage", e)}
+          value={setting.service_change_percentage}
+        />
       )}
 
-      <label className="text-slate-700 text-sm font-bold mb-2 flex flex-col">
-        Imprimir comprovantes?
-        <select
-          className="w-full border rounded-xl p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="serviceChangePrinter"
-          name="serviceChangePrinter"
-          value={setting.service_change_printer}
-          onChange={(e) => handleSetting("service_change_printer", e.target.value)}
-        >
-          <option value={1}>Sim</option>
-          <option value={0}>Não</option>
-        </select>
-      </label>
+      <CSelect
+        label="Imprimir comprovantes?"
+        options={[{ value: 1, label: "Sim" }, { value: 0, label: "Não" }]}
+        value={setting.service_change_printer}
+        onChange={(e) => handleInput("service_change_printer", e)}
+      />
 
       {String(setting.service_change_printer) === "1" && (
-        <label className="text-slate-700 text-sm font-bold mb-2 flex flex-col">
-          Nome da impressora
-          <input
-            type="text"
-            placeholder="Ex: Epson TM-T20"
-            className="w-full border rounded-xl p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            onChange={(e) => handleSetting("printer_name", e.target.value)}
-            value={setting.printer_name}
-          />
-        </label>
+        <CInput
+          id="serviceChargePercentage"
+          name="serviceChargePercentage"
+          label="Nome da impressora"
+          placeholder="Ex: Epson TM-T20"
+          onChange={(e) => handleInput("printer_name", e)}
+          value={setting.printer_name}
+        />
       )}
 
       <label className={`${toggleView ? "-z-10" : ""} relative w-full flex flex-col gap-3`}>
@@ -265,7 +239,7 @@ export const Settings = ({ showComponent }) => {
               <button
                 className="p-2 h-10 text-red-600 rounded-full shadow-md hover:bg-red-100 transition-all delay-75"
                 type="button"
-                onClick={() => handleSetting("image_pix", "")}
+                onClick={() => handleInput("image_pix", "")}
                 aria-label="Remover imagem QR Code Pix"
               >
                 <Delete />
