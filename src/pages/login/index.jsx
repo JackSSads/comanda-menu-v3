@@ -20,7 +20,7 @@ export const Login = () => {
     });
 
     const handleInput = (field, event) => {
-        setValue(prev => ({ ...prev, [field]: event }));
+        setValue(prev => ({ ...prev, [field]: event.target.value }));
     };
 
     useEffect(() => {
