@@ -81,6 +81,7 @@ export const OnlineOrders = () => {
                 if (result.status) {
                     setLoading(false);
                     socket.emit("order_ready", { client: name_client, product: name_product, check_id: check_id });
+                    setOrders({});
                     getOrders();
 
                     if (token) {

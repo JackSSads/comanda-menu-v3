@@ -79,7 +79,6 @@ export const Navbar = ({ title, url, isLogout, userId }) => {
                             <button className="px-3 py-2 rounded-md bg-[#1C1D26] hover:bg-[#EB8F00] hover:text-[#1C1D26] border-2 border-transparent hover:border-[#1C1D26] transition-all delay-75"
                                 onClick={backOldPage}
                             ><Back /></button>
-
                         </>
                     )}
                 </>

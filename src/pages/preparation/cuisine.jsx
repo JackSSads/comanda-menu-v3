@@ -131,7 +131,7 @@ export const Cousine = () => {
 
     return (
         <>
-            <Navbar title={"Churrasco"} isLogout />
+            <Navbar title={"Cozinha"} isLogout />
 
             <div className="w-[95%] min-h-[85vh] pt-3 pb-[190px] px-3 rounded-xl flex items-center flex-col gap-10">
                 <CardProductPreparation

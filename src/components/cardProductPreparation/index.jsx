@@ -4,9 +4,14 @@ export const CardProductPreparation = ({ oreders = [], orderReady, notify = () =
             {oreders.length ? (
                 <div className="w-full flex flex-col gap-6">
                     {oreders.map((item) => (
-                        <div
-                            key={item.order_id}
-                            className="flex flex-col justify-between bg-slate-100/70 rounded-xl shadow-md p-5 w-full max-w-xl mx-auto">
+                        <div key={item.order_id}
+                            className="flex flex-col justify-between bg-slate-100/70 rounded-xl shadow-md p-5 w-full max-w-xl mx-auto"
+                        >
+                            {item.created_for === 1 && (
+                                <span className="text-sm text-center font-semibold text-white bg-green-600 rounded-md">
+                                    Delivery
+                                </span>
+                            )}
                             <h3 className="font-bold text-lg mb-3 text-slate-900">{item.name_client}</h3>
 
                             <div className="flex justify-between items-center w-full gap-4">
@@ -21,12 +26,30 @@ export const CardProductPreparation = ({ oreders = [], orderReady, notify = () =
                                             {item.obs}
                                         </p>
                                     )}
+                                    {item.street && (
+                                        <div className="text-slate-600 text-sm font-medium">
+                                            <div className="flex gap-4">
+                                                <p className="flex flex-col">Rua: <span className="text-[#EB8F00]">
+                                                    {item.street}
+                                                </span>
+                                                </p>
+                                                <p className="flex flex-col">N°: <span className="text-[#EB8F00]">
+                                                    {item.house_number}
+                                                </span>
+                                                </p>
+                                                <p className="flex flex-col">Ref.: <span className="text-[#EB8F00]">
+                                                    {item.reference}
+                                                </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <button
                                     className={`flex-shrink-0 px-5 py-2 rounded-xl font-semibold transition-colors duration-300
                                             ${item.status
-                                            ? "bg-[#1C1D26] text-white hover:bg-[#EB8F00] hover:text-[#1C1D26]"
+                                            ? "bg-[#1C1D26] text-white hover:bg-[#EB8F00]"
                                             : "bg-gray-300 text-gray-600 cursor-not-allowed"
                                         }`}
                                     disabled={!item.status}

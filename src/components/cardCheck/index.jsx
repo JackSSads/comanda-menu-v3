@@ -11,18 +11,19 @@ export const CardCheck = ({ listCheck = [], navigate, user_id }) => {
             {listCheck.length > 0 ? (
                 <div className="w-full flex flex-col md:flex-row md:flex-wrap gap-6 animate-fadeUp">
                     {listCheck.map((item) => (
-                        <div
-                            className="flex justify-between items-center bg-slate-100/70 rounded-xl shadow-md px-5 py-4 w-full max-w-xl mx-auto"
-                            key={item.check_id}>
+                        <div className="flex justify-between items-center bg-slate-100/70 rounded-xl shadow-md px-5 py-4 w-full max-w-xl mx-auto"
+                            key={item.check_id}
+                        >
                             <div className="flex flex-col gap-1">
                                 <h3 className="text-slate-900 font-bold text-lg">{item.name_client}</h3>
-                                {item.obs && (
-                                    <p className="text-slate-500 text-sm font-medium">{item.obs}</p>
-                                )}
+
+                                {item.obs && <p className="text-slate-500 text-sm font-medium">{item.obs}</p>}
+
                                 <p className="text-slate-700 text-sm">
                                     <span className="font-bold text-[#EB8F00]">Total:</span>{" "}
                                     R$ {item.total_value ? item.total_value.toFixed(2).replace(".", ",") : "0,00"}
                                 </p>
+                                
                                 {!item.status && (
                                     <span className="text-sm text-red-500 font-semibold">Encerrada</span>
                                 )}
