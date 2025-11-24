@@ -21,3 +21,5 @@ export { Sidebar } from "./sidebar";
 export { CInput } from "./cInput";
 export { CSelect } from "./cSelect";
 export { CTextarea } from "./cTextarea";
+
+export { ModalStreet } from "./modalStreet";
