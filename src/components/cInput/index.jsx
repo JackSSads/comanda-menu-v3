@@ -9,7 +9,7 @@ export const CInput = ({ label = "", type = "text", id = "", name = "", placehol
                 className="w-full border border-slate-300 rounded-xl font-light px-4 py-3 text-slate-800 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#EB8F00] placeholder:text-slate-40"
                 placeholder={placeholder}
                 onChange={(e) => onChange(e)}
-                value={value}
+                value={value <= 0 ? "" : value}
             />
         </label>
     );
