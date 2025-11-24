@@ -5,7 +5,7 @@ import { Plus, Close } from "../../libs/icons";
 import { useToggleView } from "../../contexts";
 import { UsuarioService } from "../../service/usuario/UsuarioService";
 
-export const ModalUser = ({ action, id }) => {
+export const ModalUser = ({ action, id, getAllUsers }) => {
     const { toggleView, setToggleView } = useToggleView();
 
     const [value, setValue] = useState({
@@ -38,7 +38,10 @@ export const ModalUser = ({ action, id }) => {
             : UsuarioService.updateById(id, data);
 
         request
-            .then(result => toast.success(result.message))
+            .then(result => { 
+                toast.success(result.message)
+                getAllUsers();
+            })
             .catch(err => toast.error(err.message || "Erro inesperado."));
 
         clearForm();
@@ -106,7 +109,6 @@ export const ModalUser = ({ action, id }) => {
                         className="w-full border p-3 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
                         value={value.func}
                         onChange={(e) => handleInput("func", e)}>
-                        <option value="admin">Administrador</option>
                         <option value="garcom">Garçom</option>
                         <option value="barmen">Barmen</option>
                         <option value="cozinha">Cozinha</option>

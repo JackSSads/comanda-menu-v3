@@ -9,7 +9,7 @@ import { Delete, Edit, Plus } from "../../libs/icons";
 
 import { UsuarioService } from "../../service/usuario/UsuarioService";
 
-export const ManagerUser = ({ showComponent }) => {
+export const ManagerUser = () => {
     const { setToggleView } = useToggleView();
     const { setLoading } = useLoader();
 
@@ -69,8 +69,8 @@ export const ManagerUser = ({ showComponent }) => {
     };
 
     return (
-        <div className={`${showComponent === 1 ? "flex" : "hidden"} flex-col mt-5 w-full max-w-[1100px] mx-auto px-4`}>
-            <ModalUser action={action} id={id} />
+        <div className={"flex-col mt-5 w-full max-w-[1100px] mx-auto px-4"}>
+            <ModalUser action={action} id={id} getAllUsers={getAllUsers} />
 
             <h2 className="w-full text-center p-2 border-2 rounded-md border-[#1C1D26] text-[#1C1D26] font-semibold">
                 Usuários
@@ -107,18 +107,22 @@ export const ManagerUser = ({ showComponent }) => {
                                                     : "Online"}
                                 </td>
                                 <td className="px-6 py-3 text-center flex justify-center gap-3">
-                                    <button
-                                        className="p-2 rounded-md text-white bg-[#EB8F00] hover:bg-[#1C1D26] hover:text-white transition-colors"
-                                        onClick={() => handleModal("update", item.user_id)}
-                                        aria-label={`Editar usuário ${item.username}`}>
-                                        <Edit />
-                                    </button>
-                                    <button
-                                        className="p-2 rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors"
-                                        onClick={() => deleteUser(item.user_id)}
-                                        aria-label={`Deletar usuário ${item.username}`}>
-                                        <Delete />
-                                    </button>
+                                    {item.func !== "admin" && (
+                                        <>
+                                            <button
+                                                className="p-2 rounded-md text-white bg-[#EB8F00] hover:bg-[#1C1D26] hover:text-white transition-colors"
+                                                onClick={() => handleModal("update", item.user_id)}
+                                                aria-label={`Editar usuário ${item.username}`}>
+                                                <Edit />
+                                            </button>
+                                            <button
+                                                className="p-2 rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors"
+                                                onClick={() => deleteUser(item.user_id)}
+                                                aria-label={`Deletar usuário ${item.username}`}>
+                                                <Delete />
+                                            </button>
+                                        </>
+                                    )}
                                 </td>
                             </tr>
                         ))}
