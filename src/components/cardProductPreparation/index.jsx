@@ -1,4 +1,9 @@
+import { ModalStreet } from "..";
+import { useToggleView } from "../../contexts";
+
 export const CardProductPreparation = ({ oreders = [], orderReady, notify = () => { } }) => {
+    const { setToggleView } = useToggleView();
+
     return (
         <>
             {oreders.length ? (
@@ -7,7 +12,7 @@ export const CardProductPreparation = ({ oreders = [], orderReady, notify = () =
                         <div key={item.order_id}
                             className="flex flex-col justify-between bg-slate-100/70 rounded-xl shadow-md p-5 w-full max-w-xl mx-auto"
                         >
-                            {item.created_for === 1 && (
+                            {item.street && (
                                 <span className="text-sm text-center font-semibold text-white bg-green-600 rounded-md">
                                     Delivery
                                 </span>
@@ -26,47 +31,42 @@ export const CardProductPreparation = ({ oreders = [], orderReady, notify = () =
                                             {item.obs}
                                         </p>
                                     )}
-                                    {item.street && (
-                                        <div className="text-slate-600 text-sm font-medium">
-                                            <div className="flex gap-4">
-                                                <p className="flex flex-col">Rua: <span className="text-[#EB8F00]">
-                                                    {item.street}
-                                                </span>
-                                                </p>
-                                                <p className="flex flex-col">N°: <span className="text-[#EB8F00]">
-                                                    {item.house_number}
-                                                </span>
-                                                </p>
-                                                <p className="flex flex-col">Ref.: <span className="text-[#EB8F00]">
-                                                    {item.reference}
-                                                </span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    )}
+
                                 </div>
 
-                                <button
-                                    className={`flex-shrink-0 px-5 py-2 rounded-xl font-semibold transition-colors duration-300
+                                {item.street && (<ModalStreet item={item} />)}
+
+                                {item.created_at === 1 ? (
+                                    <button
+                                        className={`flex-shrink-0 px-5 py-2 rounded-xl font-semibold transition-colors duration-300
                                             ${item.status
-                                            ? "bg-[#1C1D26] text-white hover:bg-[#EB8F00]"
-                                            : "bg-gray-300 text-gray-600 cursor-not-allowed"
-                                        }`}
-                                    disabled={!item.status}
-                                    onClick={() => {
-                                        orderReady(
-                                            item.order_id,
-                                            item.name_client,
-                                            item.product_name,
-                                            item.check_id,
-                                            item.quantity,
-                                            item.obs,
-                                            item.notify_id
-                                        );
-                                        notify(item.check_id, item.product_name);
-                                    }}>
-                                    {item.status ? "Pronto" : "Finalizado"}
-                                </button>
+                                                ? "bg-[#1C1D26] text-white hover:bg-[#EB8F00]"
+                                                : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                                            }`}
+                                        disabled={!item.status}
+                                        onClick={() => {
+                                            orderReady(
+                                                item.order_id,
+                                                item.name_client,
+                                                item.product_name,
+                                                item.check_id,
+                                                item.quantity,
+                                                item.obs,
+                                                item.notify_id
+                                            );
+                                            notify(item.check_id, item.product_name);
+                                        }}>
+                                        {item.status ? "Pronto" : "Finalizado"}
+                                    </button>
+                                ) : (
+                                    <button className={`
+                                        flex-shrink-0 px-5 py-2 rounded-xl font-semibold transition-colors duration-300
+                                        bg-[#1C1D26] text-white hover:bg-[#EB8F00]`
+                                    }
+                                    onClick={() => setToggleView(true)}>
+                                        Endereço
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}
