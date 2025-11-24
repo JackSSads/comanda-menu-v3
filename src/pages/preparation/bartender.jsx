@@ -111,8 +111,7 @@ export const Bartender = () => {
                 token: item.notify_id,
                 notification: {
                     title: "Pedido pronto",
-                    body: `Aê! Tem pedido pronto aí, ehm... \n${product_name} pronto!`,
-                    icon: `/favicon.ico`
+                    body: `Aê! Tem pedido pronto aí, ehm... \n${product_name} pronto!`
                 },
                 webpush: {
                     fcmOptions: {

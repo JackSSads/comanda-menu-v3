@@ -71,7 +71,7 @@ export const Cousine = () => {
             });
     }, []);
 
-    useSocketOrderEvents(getOrders, "churrasco");
+    useSocketOrderEvents(getOrders, "cozinha");
 
     // sinalizar pedido pronto
     const orderReady = (order_id, name_client, name_product, check_id, quantity, obs) => {
@@ -110,8 +110,7 @@ export const Cousine = () => {
                 token: item.notify_id,
                 notification: {
                     title: "Pedido pronto",
-                    body: `Aê! Tem pedido pronto aí, ehm... \n${product_name} pronto!`,
-                    icon: `/favicon.ico`
+                    body: `Aê! Tem pedido pronto aí, ehm... \n${product_name} pronto!`
                 },
                 webpush: {
                     fcmOptions: {
