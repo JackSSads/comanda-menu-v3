@@ -2,22 +2,23 @@ import { useCallback, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
 import { CInput, CSelect } from "../../components";
-
+import { handleImageUpload } from "../../hooks/HandleImageUpload";
 import { useLoader, useToggleView } from "../../contexts";
 import { useDebounce } from "../../hooks/UseDebounce";
+import { blobToBase64 } from "../../hooks/BlobToBase64";
 
 import { Delete } from "../../libs/icons";
 
 import { SettingService } from "../../service/setting/SettingService";
 
-export const Settings = ({ showComponent }) => {
+export const Settings = () => {
   const { toggleView } = useToggleView();
   const { setLoading } = useLoader();
 
   const { debounce } = useDebounce(1500);
 
   const [setting, setSetting] = useState({
-    setting_id: 1,
+    setting_id: 0,
     estabishment_name: "",
     serveice_change: 0,
     service_change_percentage: 0,
@@ -34,6 +35,7 @@ export const Settings = ({ showComponent }) => {
   }, []);
 
   useEffect(() => {
+    console.log(setting)
     if (!hasManualChange) return;
 
     debounce(() => {
@@ -45,17 +47,15 @@ export const Settings = ({ showComponent }) => {
   const handleInput = (field, value) => {
     setSetting((prev) => ({
       ...prev,
-      [field]: field === "serveice_change" || field === "service_change_printer"
-        ? Number(value.target.value) : value.target.value,
+      [field]:
+        field === "serveice_change" || field === "service_change_printer"
+          ? Number(value.target.value)
+            : value.target.value,
     }));
     setHasManualChange(true);
   };
 
   const updateSetting = useCallback(() => {
-    if (!setting.setting_id) {
-      toast.error("Configurações não carregadas.");
-      return;
-    }
 
     const payload = {
       estabishment_name: setting.estabishment_name,
@@ -69,54 +69,20 @@ export const Settings = ({ showComponent }) => {
 
     setLoading(true);
 
-    SettingService.update(setting.setting_id, payload)
-      .then((result) => {
-        getSetting();
-        toast.success(result.message);
-        setLoading(false);
-      })
+    const request = setting?.setting_id !== 0
+      ? SettingService.update(setting.setting_id, payload)
+      : SettingService.create(payload);
+
+    request.then((result) => {
+      getSetting();
+      toast.success(result.message);
+      setLoading(false);
+    })
       .catch((error) => {
         setLoading(false);
         toast.error(error.message || error);
       });
   }, [setting]);
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      const validTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
-      if (!validTypes.includes(file.type)) {
-        toast.error("Apenas arquivos de imagem (JPG, PNG, WEBP) são permitidos.");
-        return;
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error("A imagem deve ser menor que 5 MB.");
-        return;
-      }
-
-      const img = new Image();
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          canvas.width = img.width;
-          canvas.height = img.height;
-
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0);
-
-          const webpDataUrl = canvas.toDataURL("image/webp", 0.8);
-
-          handleInput("image_pix", webpDataUrl);
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const getSetting = useCallback(() => {
     setLoading(true);
@@ -164,20 +130,8 @@ export const Settings = ({ showComponent }) => {
       });
   }, []);
 
-  const blobToBase64 = (blob) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-
-      reader.onloadend = () => resolve(reader.result);
-
-      reader.onerror = (error) => reject("Erro ao ler o Blob: " + error);
-
-      reader.readAsDataURL(blob);
-    });
-  };
-
   return (
-    <div className={`w-full ${showComponent === 3 ? "flex" : "hidden"} py-5 flex flex-col gap-6`}>
+    <div className={"w-full py-5 flex flex-col gap-6"}>
       <h2 className="w-full text-center p-2 border-2 rounded-md border-[#1C1D26] text-[#1C1D26] font-semibold">
         Configurações
       </h2>
@@ -262,7 +216,7 @@ export const Settings = ({ showComponent }) => {
           name="qrcodepix"
           className="hidden"
           accept="image/*"
-          onChange={handleImageUpload}
+          onChange={(e) => handleImageUpload(e, setSetting, true)}
         />
       </label>
     </div>
