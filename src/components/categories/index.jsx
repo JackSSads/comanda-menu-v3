@@ -8,7 +8,7 @@ import { useLoader } from "../../contexts";
 import { Delete, Edit, Plus, Reflesh } from "../../libs/icons";
 import { CategoryService } from "../../service/category/CategoryService";
 
-export const Categories = ({ showComponent }) => {
+export const Categories = () => {
   const { setLoading } = useLoader();
 
   const [categories, setCategories] = useState([]);
@@ -17,6 +17,7 @@ export const Categories = ({ showComponent }) => {
     screen: "",
     action: "create",
     category_id: 0,
+    printer: "",
   });
 
   useEffect(() => {
@@ -42,19 +43,20 @@ export const Categories = ({ showComponent }) => {
 
   const createCategory = () => {
     if (!newCategory.name_category || !newCategory.screen) {
-      return toast.error("Preencha todos os campos.");
+      return toast.error(`Os campos "Nome da categiria" e "Impressora" são obrigatórios.`);
     }
 
     const data = {
       name_category: newCategory.name_category,
-      screen: newCategory.screen,
+      screen: (newCategory.screen),
+      printer: String(newCategory.printer).toUpperCase(),
     };
 
     setLoading(true);
     CategoryService.create(data)
       .then((result) => {
         if (result.status) {
-          setNewCategory({ name_category: "", screen: "", action: "create", category_id: 0 });
+          setNewCategory({ name_category: "", screen: "", printer: "", action: "create", category_id: 0 });
           getAllCategories();
           toast.success(result.message);
         } else {
@@ -70,19 +72,20 @@ export const Categories = ({ showComponent }) => {
 
   const updateCategory = () => {
     if (!newCategory.name_category || !newCategory.screen) {
-      return toast.error("Preencha todos os campos.");
+      return toast.error(`Os campos "Nome da categiria" e "Impressora" são obrigatórios.`);
     }
 
     const data = {
       name_category: newCategory.name_category,
-      screen: newCategory.screen,
+      screen: (newCategory.screen),
+      printer: String(newCategory.printer).toUpperCase(),
     };
 
     setLoading(true);
     CategoryService.updateById(newCategory.category_id, data)
       .then((result) => {
         if (result.status) {
-          setNewCategory({ name_category: "", screen: "", action: "create", category_id: 0 });
+          setNewCategory({ name_category: "", screen: "", action: "create", category_id: 0, printer: "" });
           getAllCategories();
           toast.success(result.message);
         } else {
@@ -119,7 +122,7 @@ export const Categories = ({ showComponent }) => {
   };
 
   return (
-    <div className={`w-full max-w-[900px] mx-auto flex flex-col mt-5 px-4 ${showComponent === 2 ? "flex" : "hidden"}`}>
+    <div className={"w-full max-w-[900px] mx-auto flex flex-col mt-5 px-4"}>
       <h2 className="w-full text-center p-2 border-2 rounded-md border-[#1C1D26] text-[#1C1D26] font-semibold">
         Categorias
       </h2>
@@ -128,7 +131,7 @@ export const Categories = ({ showComponent }) => {
         <table className="min-w-full text-sm text-[#1C1D26]">
           <thead className="bg-[#EB8F00] text-white sticky top-0">
             <tr>
-              {["Categoria", "Tela", "Ação"].map((header) => (
+              {["Categoria", "Tela", "Impressora", "Ação"].map((header) => (
                 <th
                   key={header}
                   className="px-6 py-3 whitespace-nowrap font-semibold text-center border-r border-orange-300 last:border-r-0"
@@ -147,6 +150,7 @@ export const Categories = ({ showComponent }) => {
               >
                 <td className="px-6 py-3 text-center uppercase font-semibold">{category.name_category}</td>
                 <td className="px-6 py-3 text-center uppercase font-medium">{category.screen}</td>
+                <td className="px-6 py-3 text-center uppercase font-medium">{category.printer}</td>
                 <td className="px-6 py-3 text-center flex justify-center gap-3">
                   <button
                     className="p-2 rounded-md text-white bg-[#EB8F00] hover:bg-[#1C1D26] hover:text-white transition-colors"
@@ -156,6 +160,7 @@ export const Categories = ({ showComponent }) => {
                         screen: category.screen,
                         action: "update",
                         category_id: category.category_id,
+                        printer: category.printer,
                       })
                     }
                     aria-label={`Editar categoria ${category.name_category}`}
@@ -185,11 +190,19 @@ export const Categories = ({ showComponent }) => {
           value={newCategory.name_category}
         />
 
+        <CInput
+          id="printer"
+          name="name_category"
+          placeholder="Impressora"
+          onChange={(e) => handleInput("printer", e)}
+          value={newCategory.printer}
+        />
+
         <CSelect
           options={[
             { value: "", label: "Selecione a tela" },
             { value: "bar", label: "Bar" },
-            { value: "churrasco", label: "Churrasco" },
+            { value: "cozinha", label: "Cozinha" },
             { value: "sem tela", label: "Sem tela" },
           ]}
           onChange={(e) => handleInput("screen", e)}
