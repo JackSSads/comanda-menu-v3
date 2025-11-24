@@ -2,8 +2,8 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-import { Navbar } from "../../components";
-import { ModalProduct, Filter } from "../../components";
+import { ModalProduct, Filter, Navbar } from "../../components";
+import { blobToBase64 } from "../../hooks/BlobToBase64";
 
 import { useToggleView, useLoader } from "../../contexts";
 
@@ -58,22 +58,6 @@ export const ShowEditProducts = () => {
             .catch((error) => {
                 toast.error('Erro ao processar produtos: ' + error.message);
             });
-    };
-
-    const blobToBase64 = (blob) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-
-            reader.onloadend = () => {
-                resolve(reader.result);
-            };
-
-            reader.onerror = (error) => {
-                reject('Erro ao ler o Blob: ' + error);
-            };
-
-            reader.readAsDataURL(blob);
-        });
     };
 
     const getAllProducts = useCallback(() => {

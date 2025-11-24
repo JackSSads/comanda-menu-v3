@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
 
 import { CInput, CSelect, CTextarea } from "../../components";
+import { blobToBase64 } from "../../hooks/BlobToBase64";
+import { handleImageUpload } from "../../hooks/HandleImageUpload";
 
 import { useToggleView, useLoader } from "../../contexts";
 import { Plus, Close, Delete } from "../../libs/icons";
@@ -74,7 +76,12 @@ export const ModalProduct = ({ action, id }) => {
         CategoryService.getAll()
             .then((result) => {
                 if (result.length > 0) {
-                    setCategories(result);
+                    setCategories([{
+                        category_id: 0,
+                        name_category: "Selecione uma categoria"
+                    },
+                    ...result
+                    ]);
                 };
 
                 if (result?.status === false) {
@@ -132,61 +139,6 @@ export const ModalProduct = ({ action, id }) => {
                 toast.error(error.message);
                 return
             });
-    };
-
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
-
-        if (file) {
-            // Verifica se o arquivo é uma imagem
-            const validTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
-            if (!validTypes.includes(file.type)) {
-                toast.error("Apenas arquivos de imagem (JPG, PNG, WEBP) são permitidos.");
-                return
-            };
-
-            // Verifica se o tamanho do arquivo é maior que 5 mb
-            if (file.size > 5 * 1024 * 1024) {
-                toast.error("A imagem deve ser menor que 5 MB.");
-                return
-            };
-
-            const img = new Image();
-            const reader = new FileReader();
-
-            reader.onload = (e) => {
-                img.onload = () => {
-                    const canvas = document.createElement("canvas");
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-
-                    const ctx = canvas.getContext("2d");
-                    ctx.drawImage(img, 0, 0);
-
-                    const webpDataUrl = canvas.toDataURL("image/webp", 0.8);
-
-                    setValue((prev) => ({ ...prev, image: webpDataUrl }));
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        };
-    };
-
-    const blobToBase64 = (blob) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-
-            reader.onloadend = () => {
-                resolve(reader.result);
-            };
-
-            reader.onerror = (error) => {
-                reject('Erro ao ler o Blob: ' + error);
-            };
-
-            reader.readAsDataURL(blob);
-        });
     };
 
     useEffect(() => {
@@ -317,7 +269,7 @@ export const ModalProduct = ({ action, id }) => {
                             type="file"
                             id="qrcodepix"
                             className="hidden"
-                            onChange={(e) => handleImageUpload(e)}
+                            onChange={(e) => handleImageUpload(e, setValue)}
                         />
                     </div>
                 </div>

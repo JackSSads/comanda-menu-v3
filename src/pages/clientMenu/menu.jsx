@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { Cart } from "../../libs/icons";
 
 import { Navbar, CardProduct, Filter } from "../../components";
+import { blobToBase64 } from "../../hooks/BlobToBase64";
 
 import { ProductService } from "../../service/product/ProductService";
 import { SettingService } from "../../service/setting/SettingService";
@@ -18,7 +19,7 @@ export const Menu = () => {
     const { setLoading } = useLoader();
     const navigate = useNavigate();
     const { setToggleView } = useToggleView();
-    const { debounce } = useDebounce(500);
+    const { debounce } = useDebounce(1500);
 
     const { id } = useParams();
     const { verifyIfClientId } = useVerifyIfClientId(id);
@@ -134,15 +135,6 @@ export const Menu = () => {
         } catch (error) {
             toast.error(error.message);
         }
-    };
-
-    const blobToBase64 = (blob) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.onerror = (error) => reject('Erro ao ler o Blob: ' + error);
-            reader.readAsDataURL(blob);
-        });
     };
 
     const updateSelectedProduct = (newSelectedProduct, new_stock = []) => {
