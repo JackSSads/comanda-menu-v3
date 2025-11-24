@@ -10,15 +10,14 @@ export const App = () => {
   useEffect(() => {
     const favicon = document.querySelector("link[rel~='icon']");
     if (favicon) {
-      favicon.href = process.env.REACT_APP_FAVICON_URL;
+      favicon.href = "/logo.ico";
     } else {
       const newFavicon = document.createElement("link");
       newFavicon.rel = "icon";
-      newFavicon.href = process.env.REACT_APP_FAVICON_URL;
+      newFavicon.href = "/logo.ico";
       document.head.appendChild(newFavicon);
     }
   }, []);
-
 
   return (
     <LoaderContextProvider>
