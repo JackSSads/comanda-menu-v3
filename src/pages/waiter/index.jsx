@@ -17,7 +17,7 @@ import { OrderService } from "../../service/order/OrderService";
 
 export const Waiter = () => {
 
-    const { debounce } = useDebounce(700);
+    const { debounce } = useDebounce(1500);
 
     const navigate = useNavigate();
 
@@ -39,7 +39,11 @@ export const Waiter = () => {
             status: 0,
             quantity: 0,
             obs: "",
-            new_stock: [undefined, undefined]
+            new_stock: [undefined, undefined],
+            old_quantity: 0,
+            new_quantity: 0,
+            printer_name: [],
+
         },
         screens: "",
         product_name: "",
@@ -73,7 +77,10 @@ export const Waiter = () => {
                                 screens: updateOrder.screens,
                                 action: updateOrder.action,
                                 product_name: updateOrder.product_name,
-                                client
+                                client,
+                                old_quantity: updateOrder.data.old_quantity,
+                                new_quantity: updateOrder.data.new_quantity,
+                                printer_name: updateOrder.data.printer_name || [],
                             };
 
                             setLoading(false);
@@ -155,15 +162,15 @@ export const Waiter = () => {
     useSocketOrderEvents(getCheckById, "waiter");
 
     // Editar quantidade do produto na lista
-    const alterQnt = (
-        order_id, quantity, obs, screen,
-        product_name, stock, product_id, action
-    ) => {
+    const alterQnt = (order_id, quantity, obs, screen, product_name, stock, product_id, action, printer) => {
         const data = {
             check_id: id,
             status: 1,
             quantity: quantity,
             obs: obs,
+            old_quantity: 0,
+            new_quantity: 0,
+            printer_name: [printer],
         };
 
         if (action === "+") {
@@ -171,10 +178,14 @@ export const Waiter = () => {
 
             if (new_stock > 0) {
                 if (updateOrder.data.quantity) {
+                    data.old_quantity = quantity;
                     data.quantity = updateOrder.data.quantity + 1;
+                    data.new_quantity = data.quantity;
                     data.new_stock = [updateOrder.data.new_stock[0] - 1, product_id];
                 } else {
+                    data.old_quantity = quantity;
                     data.quantity = data.quantity + 1;
+                    data.new_quantity = data.quantity;
                     data.new_stock = [stock - 1, product_id];
                 };
             } else {
@@ -187,10 +198,14 @@ export const Waiter = () => {
 
             if (new_stock >= 0 && new_quantity > 1) {
                 if (updateOrder.data.quantity) {
+                    data.old_quantity = quantity;
                     data.quantity = updateOrder.data.quantity - 1;
+                    data.new_quantity = data.quantity;
                     data.new_stock = [updateOrder.data.new_stock[0] + 1, product_id];
                 } else {
+                    data.old_quantity = quantity;
                     data.quantity = data.quantity - 1;
+                    data.new_quantity = data.quantity;
                     data.new_stock = [stock + 1, product_id];
                 };
             } else {
@@ -202,10 +217,7 @@ export const Waiter = () => {
     };
 
     // remover item da comanda pelo índice
-    const deleteItem = (
-        order_id, product_name, screen,
-        quantity, product_id, stock
-    ) => {
+    const deleteItem = (order_id, product_name, screen, quantity, product_id, stock, printer) => {
         setLoading(true);
 
         const data = {
@@ -219,7 +231,12 @@ export const Waiter = () => {
                 if (result.status) {
                     setLoading(false);
                     setListProducts((prev) => prev.filter((item) => item.order_id !== order_id));
-                    socket.emit("product_removed", { product_name, client, screens: screen });
+                    socket.emit("product_removed", {
+                        product_name,
+                        client,
+                        screens: screen,
+                        printer_name: printer !== "" ? [printer] : []
+                    });
                     getCheckById();
                     return toast.success(result.message);
                 };
@@ -262,7 +279,7 @@ export const Waiter = () => {
                                 {e.status ? (
                                     <div className="flex flex-col-reverse items-center border border-slate-500 rounded-md">
                                         <button className="px-2 py-1 border-t border-slate-500 text-slate-900 hover:text-[#EB8F00] transition"
-                                            onClick={() => alterQnt(e.order_id, e.quantity, e.obs, e.screen, e.product_name, e.stock, e.product_id, "-")}
+                                            onClick={() => alterQnt(e.order_id, e.quantity, e.obs, e.screen, e.product_name, e.stock, e.product_id, "-", e.printer)}
                                         ><Minus /></button>
 
                                         <p className="text-[#EB8F00]">
@@ -270,7 +287,7 @@ export const Waiter = () => {
                                         </p>
 
                                         <button className="px-2 py-1 border-b border-slate-500 text-slate-900 hover:text-green-500 transition"
-                                            onClick={() => alterQnt(e.order_id, e.quantity, e.obs, e.screen, e.product_name, e.stock, e.product_id, "+")}
+                                            onClick={() => alterQnt(e.order_id, e.quantity, e.obs, e.screen, e.product_name, e.stock, e.product_id, "+", e.printer)}
                                         ><Plus /></button>
                                     </div>
                                 ) : (
@@ -286,7 +303,7 @@ export const Waiter = () => {
                                 )}
 
                                 <button className="text-[#1C1D26] p-2 rounded-md border-2 hover:text-red-600 hover:border-red-600 transition-all delay-75"
-                                    onClick={() => deleteItem(e.order_id, e.product_name, e.screen, e.quantity, e.product_id, e.stock)}
+                                    onClick={() => deleteItem(e.order_id, e.product_name, e.screen, e.quantity, e.product_id, e.stock, e.printer)}
                                 ><Delete /></button>
                             </div>
                         </div>
