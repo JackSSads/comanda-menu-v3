@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 import { useLoader } from "../../contexts";
 
-import { Navbar } from "../../components";
+import { Navbar, CInput, CTextarea } from "../../components";
 
 import { CheckService } from "../../service/check/CheckService";
 import { CashierService } from "../../service/cashier/CashierService"
@@ -19,7 +19,10 @@ export const RegisterClient = () => {
     const [value, setValue] = useState({
         name_client: "",
         cashier_id: null,
-        obs: ""
+        obs: "",
+        street: "",
+        house_number: "",
+        reference: "",
     });
 
     useEffect(() => {
@@ -86,6 +89,9 @@ export const RegisterClient = () => {
             name_client: value.name_client,
             cashier_id,
             obs: value.obs,
+            street: value.street,
+            house_number: value.house_number,
+            reference: value.reference,
         };
 
         CheckService.createClosed(data)
@@ -110,31 +116,49 @@ export const RegisterClient = () => {
 
     return (
         <>
-            <Navbar title="Bem-vindo" url/>
+            <Navbar title="Bem-vindo" url />
 
             <div className="w-full min-h-[85vh] flex items-center justify-center">
                 <div className="w-full max-w-sm bg-white rounded-2xl shadow-md p-6 flex flex-col gap-8">
-
                     <div className="flex flex-col gap-4">
-                        <input
-                            type="text"
+                        <CInput
                             id="name_client"
                             name="name_client"
-                            required
                             placeholder="Nome do cliente"
                             onChange={(e) => handleInput("name_client", e)}
                             value={value.name_client}
-                            className="w-full border border-slate-300 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#EB8F00] placeholder:text-slate-400"
                         />
 
-                        <textarea
+                        <CInput
+                            id="street"
+                            name="street"
+                            placeholder="Rua"
+                            onChange={(e) => handleInput("street", e)}
+                            value={value.street}
+                        />
+
+                        <CInput
+                            id="house_number"
+                            name="house_number"
+                            placeholder="Número da casa"
+                            onChange={(e) => handleInput("house_number", e)}
+                            value={value.house_number}
+                        />
+
+                        <CInput
+                            id="reference"
+                            name="reference"
+                            placeholder="Referência"
+                            onChange={(e) => handleInput("reference", e)}
+                            value={value.reference}
+                        />
+
+                        <CTextarea
                             id="obs"
                             name="obs"
-                            required
                             placeholder="Observação"
                             onChange={(e) => handleInput("obs", e)}
                             value={value.obs}
-                            className="w-full h-[140px] border border-slate-300 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#EB8F00] placeholder:text-slate-400 resize-none"
                         />
                     </div>
 

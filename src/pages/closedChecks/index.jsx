@@ -54,34 +54,38 @@ export const ClosedChecks = () => {
             <Navbar title={`Comandas Fechadas`} url />
 
             <div className="w-[95%] min-h-[90vh] py-3 px-5 rounded-xl flex items-center flex-col gap-5">
-                <div className="w-full flex sm:flex-row flex-wrap flex-col items-center justify-center gap-5">
+                <div className="w-full flex flex-col md:flex-row md:flex-wrap gap-6 animate-fadeU">
 
-                    {rows.length > 0 ? rows.map((e) => (
-                        <div className="w-full sm:w-[280px] md:w-[350px] xl:w-[550px] my-3 px-5 py-4 rounded-xl bg-white shadow-md border border-slate-200 flex justify-between items-center gap-3"
-                            key={e.check_id}>
+                    {rows.length > 0 ? rows.map((item) => (
+                        <div className="flex justify-between items-center bg-slate-100/70 rounded-xl shadow-md px-5 py-4 w-full max-w-xl mx-auto"
+                            key={item.check_id}
+                        >
 
-                            <div className="flex flex-col justify-between gap-4">
+                            <div className="flex flex-col gap-1">
 
                                 <div className="flex flex-col gap-1">
-                                    <span className={`text-sm font-semibold ${e.created_for === 1 ? "text-green-600" : "text-blue-600"}`}>
-                                        {e.created_for === 1 ? "Online" : "Garçom"}
+                                    <span className={`text-sm font-semibold ${item.created_for === 1 ? "text-green-600" : "text-blue-600"}`}>
+                                        {item.created_for === 1 ? "Online" : "Garçom"}
                                     </span>
-                                    <h3 className="text-xl text-slate-900 font-bold">{e.name_client}</h3>
-                                    {e.obs && <p className="text-slate-500 text-sm">{e.obs}</p>}
+
+                                    <h3 className="text-slate-900 font-bold text-lg">{item.name_client}</h3>
+
+                                    {item.obs && <p className="text-slate-500 text-sm font-medium">{item.obs}</p>}
                                 </div>
 
                                 <div className="flex flex-col gap-1 mt-2">
 
-                                    <p className="text-sm text-slate-600">
-                                        <span className="font-semibold text-[#EB8F00]">Total:</span> R$ {parseFloat(e.total_value || 0).toFixed(2).replace(".", ",")}
+                                    <p className="text-slate-700 text-sm">
+                                        <span className="font-bold text-[#EB8F00]">Total:</span>{" "}
+                                        R$ {item.total_value ? item.total_value.toFixed(2).replace(".", ",") : "0,00"}
                                     </p>
 
                                     <p className="text-sm text-slate-600">
                                         <span className="font-semibold text-[#EB8F00]">Pagamento:</span>{" "}
-                                        {e.pay_form === "credit" ? "Crédito" :
-                                            e.pay_form === "debit" ? "Débito" :
-                                                e.pay_form === "pix" ? "Pix" :
-                                                    e.pay_form === "cash" ? "Dinheiro" :
+                                        {item.pay_form === "credit" ? "Crédito" :
+                                            item.pay_form === "debit" ? "Débito" :
+                                                item.pay_form === "pix" ? "Pix" :
+                                                    item.pay_form === "cash" ? "Dinheiro" :
                                                         "Ainda não foi pago"}
                                     </p>
                                 </div>
@@ -89,7 +93,7 @@ export const ClosedChecks = () => {
 
                             <button
                                 className="p-4 h-fit rounded-full bg-[#1C1D26] text-white hover:bg-[#EB8F00] transition-all delay-75 text-sm font-semibold"
-                                onClick={() => navigate(`/admin/garcom/comanda/${e.check_id}`)}>
+                                onClick={() => navigate(`/admin/garcom/comanda/${item.check_id}`)}>
                                 <Right />
                             </button>
                         </div>

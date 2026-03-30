@@ -1,8 +1,24 @@
 import { API } from "../axiosConfig";
 
-const  get = async () => {
+const get = async () => {
     try {
         const res = await API.get("/api/setting");
+
+        return res.data;
+    } catch (error) {
+        if (error.response) {
+            throw new Error(error.response.data.message || "Erro na resposta da API");
+        } else if (error.request) {
+            throw new Error("Sem resposta do servidor");
+        } else {
+            throw new Error(error.message);
+        }
+    };
+};
+
+const create = async (data) => {
+    try {
+        const res = await API.post("/api/setting", data);
 
         return res.data;
     } catch (error) {
@@ -34,5 +50,6 @@ const update = async (setting_id, data) => {
 
 export const SettingService = {
     get,
+    create,
     update
 };

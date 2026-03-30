@@ -114,14 +114,14 @@ export const ListingProducts = () => {
     }, []);
 
     // adicionar produtos
-    const addProduct = (product_id, screen) => {
+    const addProduct = (product_id, screen, printer) => {
         if (selectedProduct.some((item) => item[1] === product_id)) {
             return toast("Produto já adicionado", { icon: "😐", duration: 1200 });
         };
 
-        const if_exists = screens.some((item) => item === screen);
+        const if_exists = screens.some((item) => item.screen === screen);
         if (!if_exists) {
-            setScreens((prev) => [...prev, screen]);
+            setScreens((prev) => [...prev, { screen, printer }]);
         };
 
         setSelectedProduct((prev) => [...prev, [Number(id), product_id, 1, null]])
@@ -131,7 +131,7 @@ export const ListingProducts = () => {
     //remover item da lista
     const removeProduct = (product_id) => {
         if (!selectedProduct.some((item) => item[1] === product_id)) {
-            return toast("Oxe ???", { icon: "🤨", duration: 1200 });
+            return toast("Oxe? Tás doido, é???", { icon: "🤨", duration: 1500 });
         };
 
         const index = selectedProduct.findIndex((item) => item[1] === product_id);
@@ -186,9 +186,17 @@ export const ListingProducts = () => {
 
         const qtn = [];
 
+        let list_for_print = [];
+
         listProducts.filter((item) => {
             selectedProduct.filter((selected) => {
                 if (item.product_id === selected[1]) {
+                    list_for_print.push({
+                        name_product: item.product_name,
+                        price: item.price,
+                        quantity: selected[2],
+                        obs: selected[3],
+                    });
                     qtn.push([(item.stock - selected[2]), item.product_id])
                 };
             });
@@ -199,7 +207,16 @@ export const ListingProducts = () => {
                 if (result.status) {
                     const objSocket = {
                         client,
-                        screens: created_for === 0 ? screens : ["online"]
+                        screens: created_for === 0
+                            ? screens.map((screen) => screen.screen)
+                            : [{ screen: "online", printer: "ONLINE" }],
+                        printer_name: [
+                            ...new Set(
+                                screens
+                                    .filter(screen => screen.printer)
+                                    .map(screen => screen.printer
+                                    ))],
+                        items: list_for_print,
                     };
 
                     notify();
@@ -226,8 +243,7 @@ export const ListingProducts = () => {
                 token: item.notify_id,
                 notification: {
                     title: "Novo pedido",
-                    body: "Aê! Tem pedido entrando, vê lá!",
-                    icon: `/favicon.ico`
+                    body: "Aê! Tem pedido entrando, vê lá!"
                 },
                 webpush: {
                     fcmOptions: {
@@ -274,7 +290,7 @@ export const ListingProducts = () => {
                         >Adicionar</button>
                     </div>
                     {selectedProduct.length > 0 &&
-                        <button className="fixed bottom-1 right-1" onClick={() => setToggleView(!toggleView)}
+                        <button className="fixed bottom-1 right-1 hidden" onClick={() => setToggleView(!toggleView)}
                         ><ClipBoard /></button>
                     }
                 </div>
@@ -317,7 +333,7 @@ export const ListingProducts = () => {
 
                                 <div className="flex gap-4 flex-col">
                                     <button className="text-[#1C1D26] p-2 rounded-md border-2 hover:text-blue-500 hover:border-blue-500 transition-all delay-75"
-                                        onClick={() => addProduct(item.product_id, item.screen)}
+                                        onClick={() => addProduct(item.product_id, item.screen, item.printer)}
                                     ><Plus /></button>
 
                                     <button className="text-[#1C1D26] p-2 rounded-md border-2 hover:text-red-600 hover:border-red-600 transition-all delay-75"
