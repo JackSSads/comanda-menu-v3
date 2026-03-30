@@ -35,8 +35,8 @@ export const CardProductPreparation = ({ oreders = [], orderReady, notify = () =
                                 </div>
 
                                 {item.street && (<ModalStreet item={item} />)}
-
-                                {item.created_at === 1 ? (
+                                
+                                {item.created_for ? (
                                     <button
                                         className={`flex-shrink-0 px-5 py-2 rounded-xl font-semibold transition-colors duration-300
                                             ${item.status
