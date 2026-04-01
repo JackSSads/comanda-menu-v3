@@ -55,7 +55,7 @@ export const NewCheck = ({ is_client = false, user_id }) => {
                 cashier_id: value.cashier_id,
                 obs: value.obs,
                 street: "",
-                house_number: "",
+                house_number: 0,
                 reference: "",
             };
 
