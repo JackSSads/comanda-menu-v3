@@ -136,6 +136,7 @@ export const Cousine = () => {
                 <CardProductPreparation
                     oreders={oreders}
                     orderReady={orderReady}
+                    screen="cozinha"
                     notify={notify}
                 />
             </div>

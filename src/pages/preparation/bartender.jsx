@@ -137,6 +137,7 @@ export const Bartender = () => {
                 <CardProductPreparation
                     oreders={oreders}
                     orderReady={orderReady}
+                    screen="bar"
                     notify={notify}
                 />
             </div>
