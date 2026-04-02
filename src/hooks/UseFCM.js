@@ -99,7 +99,6 @@ export const useFCM = (id = null, isClient = true) => {
             if (!msg) return;
 
             unsubscribe = onMessage(msg, (payload) => {
-                console.log("Notificação recebida:", payload);
                 if (Notification.permission !== "granted") return;
 
                 const link = payload.fcmOptions?.link
