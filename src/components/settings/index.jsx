@@ -35,7 +35,6 @@ export const Settings = () => {
   }, []);
 
   useEffect(() => {
-    console.log(setting)
     if (!hasManualChange) return;
 
     debounce(() => {
@@ -48,9 +47,10 @@ export const Settings = () => {
     setSetting((prev) => ({
       ...prev,
       [field]:
-        field === "serveice_change" || field === "service_change_printer"
-          ? Number(value.target.value)
-            : value.target.value,
+        field === "serveice_change"
+        || field === "service_change_printer"
+        ? Number(value)
+        : value,
     }));
     setHasManualChange(true);
   };
@@ -141,7 +141,7 @@ export const Settings = () => {
         name="establishmentName"
         label="Nome do Estabelecimento"
         placeholder="Ex: Restaurante XYZ"
-        onChange={(e) => handleInput("estabishment_name", e)}
+        onChange={(e) => handleInput("estabishment_name", e.target.value)}
         value={setting.estabishment_name}
       />
 
@@ -149,7 +149,7 @@ export const Settings = () => {
         label="Cobrar Taxa de Serviço?"
         options={[{ value: 1, label: "Sim" }, { value: 0, label: "Não" }]}
         value={setting.serveice_change}
-        onChange={(e) => handleInput("serveice_change", e)}
+        onChange={(e) => handleInput("serveice_change", e.target.value)}
       />
 
       {String(setting.serveice_change) === "1" && (
@@ -158,7 +158,7 @@ export const Settings = () => {
           name="serviceChargePercentage"
           label="Percentual de Taxa de Serviço (%)"
           placeholder="0"
-          onChange={(e) => handleInput("service_change_percentage", e)}
+          onChange={(e) => handleInput("service_change_percentage", e.target.value)}
           value={setting.service_change_percentage}
         />
       )}
@@ -167,7 +167,7 @@ export const Settings = () => {
         label="Imprimir comprovantes?"
         options={[{ value: 1, label: "Sim" }, { value: 0, label: "Não" }]}
         value={setting.service_change_printer}
-        onChange={(e) => handleInput("service_change_printer", e)}
+        onChange={(e) => handleInput("service_change_printer", e.target.value)}
       />
 
       {String(setting.service_change_printer) === "1" && (
@@ -176,7 +176,7 @@ export const Settings = () => {
           name="serviceChargePercentage"
           label="Nome da impressora"
           placeholder="Ex: Epson TM-T20"
-          onChange={(e) => handleInput("printer_name", e)}
+          onChange={(e) => handleInput("printer_name", e.target.value)}
           value={setting.printer_name}
         />
       )}
