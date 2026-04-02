@@ -18,7 +18,7 @@ export const useNotification = () => {
 
     const notification = new Notification("Comanda Menu", {
       body: `${client}, tem um pedido pronto aí, ehm...`,
-      icon: "/logo192.png",
+      icon: "/logo.ico",
     });
 
     notification.addEventListener("click", () => {
