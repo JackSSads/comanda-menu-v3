@@ -17,7 +17,7 @@ export const Home = () => {
                         <div className="flex flex-col sm:flex-row items-center gap-6">
                             <img
                                 className="w-40 md:w-56 rounded-full shadow-lg transition-transform hover:scale-105"
-                                src="logo192.png"
+                                src="/logo.ico"
                                 alt="Logo Comanda Menu"
                             />
 
