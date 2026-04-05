@@ -29,7 +29,8 @@ export const CloseCheck = () => {
         total_value: 0,
         status: false,
         pay_form: "",
-        cashier_id: 0
+        cashier_id: 0,
+        createdAt: "",
     });
 
     const [products, setProducts] = useState([]);
@@ -71,6 +72,7 @@ export const CloseCheck = () => {
                         total_value: result[0].total_value || 0,
                         pay_form: result[0].pay_form ? result[0].pay_form : "pix",
                         cashier_id: result[0].cashier_id,
+                        createdAt: result[0].created_at
                     }));
                     setDisabledButton(false);
                 };
@@ -214,11 +216,13 @@ export const CloseCheck = () => {
 
     const print = (name_client, items, total_value) => {
         socket.emit("print_check", {
+            check_id: id,
             name_client,
             items,
             total_value,
             printer_name: setting.printer_name,
-            estabishment_name: setting.estabishment_name
+            estabishment_name: setting.estabishment_name,
+            createdAt: check.createdAt,
         });
     };
 
