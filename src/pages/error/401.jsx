@@ -1,12 +1,13 @@
 import { useLoader } from "../../contexts";
-
+import { useNavigate } from "react-router-dom";
 import { Navbar } from "../../components";
-
+import { Right } from "../../libs/icons";
 import { XError } from "../../libs/icons";
 
 export const NotAuthorized = () => {
 
     const { setLoading } = useLoader();
+    const navigate = useNavigate();
 
     setLoading(false);
 
@@ -32,6 +33,12 @@ export const NotAuthorized = () => {
                         <span className="text-[3em]">🤨</span>
                         <p className="text-center">Caso queira tirar alguma dúvida, fale com nossos atendentes.</p>
                     </div>
+
+                    <button
+                        className="p-3 h-fit rounded-full bg-[#1C1D26] text-white hover:bg-[#EB8F00] transition-all delay-75 text-sm font-semibold"
+                        onClick={() => navigate("/login")}>
+                            Fazer login
+                    </button>
                 </div>
             </div>
         </>
