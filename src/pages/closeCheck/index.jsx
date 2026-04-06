@@ -224,15 +224,6 @@ export const CloseCheck = () => {
             estabishment_name: setting.estabishment_name,
             createdAt: check.createdAt,
         });
-        console.log({
-            check_id: id,
-            name_client,
-            items,
-            total_value,
-            printer_name: setting.printer_name,
-            estabishment_name: setting.estabishment_name,
-            createdAt: check.createdAt,
-        })
     };
 
     return (
