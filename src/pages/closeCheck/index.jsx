@@ -117,6 +117,7 @@ export const CloseCheck = () => {
         SettingService.get()
             .then((result) => {
                 if (result[0]) {
+                    console.log(result[0]);
                     const image = result[0].image_pix?.data;
 
                     if (image) {
