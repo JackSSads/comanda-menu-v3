@@ -117,7 +117,6 @@ export const CloseCheck = () => {
         SettingService.get()
             .then((result) => {
                 if (result[0]) {
-                    console.log(result[0]);
                     const image = result[0].image_pix?.data;
 
                     if (image) {
@@ -225,6 +224,15 @@ export const CloseCheck = () => {
             estabishment_name: setting.estabishment_name,
             createdAt: check.createdAt,
         });
+        console.log({
+            check_id: id,
+            name_client,
+            items,
+            total_value,
+            printer_name: setting.printer_name,
+            estabishment_name: setting.estabishment_name,
+            createdAt: check.createdAt,
+        })
     };
 
     return (
